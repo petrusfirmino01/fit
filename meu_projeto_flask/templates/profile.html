@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <span class="role-badge">Função: {{ usuario.funcao|capitalize }}</span>
+
+    <div class="profile-header">
+        {% if usuario.foto_perfil and usuario.foto_perfil != 'static/images/default_avatar.png' %}
+            <img src="/{{ usuario.foto_perfil }}" alt="{{ usuario.nome_exibido }}" class="avatar-img">
+        {% else %}
+            <div class="avatar-circle">{{ (usuario.nome_exibido[:1] or 'U')|upper }}</div>
+        {% endif %}
+        <div>
+            <h2>{{ usuario.nome_exibido }}</h2>
+            <div style="color: var(--texto-suave);">{{ usuario.email_exibido }}</div>
+        </div>
+    </div>
+
+    <div class="profile-stats-grid">
+        <div><strong>E-mail:</strong> {{ usuario.email_exibido }}</div>
+        <div><strong>Peso:</strong> {{ usuario.peso }} kg</div>
+        <div><strong>Idade:</strong> {{ usuario.idade }} anos</div>
+        <div><strong>Altura:</strong> {{ usuario.altura }} m</div>
+    </div>
+
+    <h3 style="margin-bottom: 10px;">Minhas Metas</h3>
+    <ul class="goals-list">
+        {% for meta in metas %}
+            <li>✅ {{ meta }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="form-actions">
+        <a href="{{ url_for('editar_usuario') }}" class="btn btn-primary">Editar Perfil</a>
+        <a href="{{ url_for('imc_view', peso=usuario.peso, altura=usuario.altura) }}" class="btn btn-secondary">Calcular meu IMC</a>
+    </div>
+</div>
+{% endblock %}

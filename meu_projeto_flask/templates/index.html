@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<section class="hero-banner">
+    <h1>Bem-vindo ao Portal Saúde & Bem-Estar</h1>
+    <p>Acompanhe sua saúde, calcule seu IMC e cuide melhor de você todos os dias.</p>
+</section>
+
+<div class="grid-2">
+    <div class="card">
+        <h2>Operações Matemáticas</h2>
+        <p style="color: var(--texto-suave); margin: 8px 0 18px;">Calcule operações rápidas e veja o resultado detalhado.</p>
+        <form action="{{ url_for('math_view') }}" method="POST">
+            <div class="form-group">
+                <label for="operacao">Operação</label>
+                <select id="operacao" name="operacao">
+                    <option value="soma">Soma (+)</option>
+                    <option value="subtracao">Subtração (-)</option>
+                    <option value="multiplicacao">Multiplicação (×)</option>
+                    <option value="divisao">Divisão (÷)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="num_a">Primeiro número</label>
+                <input type="number" step="any" id="num_a" name="a" placeholder="Ex: 10" required>
+            </div>
+            <div class="form-group">
+                <label for="num_b">Segundo número</label>
+                <input type="number" step="any" id="num_b" name="b" placeholder="Ex: 5" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Ir para a Calculadora</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Calculadora de IMC</h2>
+        <p style="color: var(--texto-suave); margin: 8px 0 18px;">Descubra seu Índice de Massa Corporal em segundos.</p>
+        <form action="{{ url_for('imc_view') }}" method="POST">
+            <div class="form-group">
+                <label for="peso">Peso (kg)</label>
+                <input type="number" step="0.1" id="peso" name="peso" placeholder="Ex: 70.5" required>
+            </div>
+            <div class="form-group">
+                <label for="altura">Altura (m)</label>
+                <input type="number" step="0.01" id="altura" name="altura" placeholder="Ex: 1.75" required>
+            </div>
+            <div class="form-group">
+                <label for="idade">Idade</label>
+                <input type="number" id="idade" name="idade" value="25" min="1" max="120">
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo</label>
+                <select id="sexo" name="sexo">
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Calcular</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Criar Conta - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h1>Criar Nova Conta</h1>
+
+    <form action="{{ url_for('register') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" value="{{ nome or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Usuário / E-mail</label>
+            <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <div class="password-wrapper">
+                <input type="password" id="senha" name="senha" required>
+                <button type="button" class="toggle-password" id="toggleRegSenha" aria-label="Exibir ou ocultar senha">👁</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmar_senha">Confirmar Senha</label>
+            <input type="password" id="confirmar_senha" name="confirmar_senha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="funcao">Função</label>
+            <select id="funcao" name="funcao">
+                <option value="comum" {% if funcao == 'comum' %}selected{% endif %}>Comum</option>
+                <option value="admin" {% if funcao == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="foto_perfil">Foto de Perfil (opcional)</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Cadastrar Usuário</button>
+    </form>
+
+    <div class="auth-link">
+        Já possui conta? <a href="{{ url_for('login') }}">Entrar</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const regSenha = document.getElementById("senha");
+    const toggleReg = document.getElementById("toggleRegSenha");
+    toggleReg.addEventListener("click", () => {
+        regSenha.type = regSenha.type === "password" ? "text" : "password";
+    });
+</script>
+{% endblock %}

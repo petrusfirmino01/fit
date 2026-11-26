@@ -1,0 +1,24 @@
+<header class="site-header">
+    <div class="header-inner">
+        <a href="{{ url_for('index') }}" class="brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="brand-logo" onerror="this.style.display='none'">
+            <span>Portal Saúde & Bem-Estar</span>
+        </a>
+
+        <nav class="nav-menu">
+            <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a>
+            <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">Sobre</a>
+
+            {% if current_user %}
+                {% if current_user.funcao == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a>
+                {% endif %}
+                <a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}">Perfil</a>
+                <a href="{{ url_for('logout') }}">Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Login</a>
+                <a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}">Perfil 🔒</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

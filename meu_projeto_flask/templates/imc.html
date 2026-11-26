@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Calculadora de IMC - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 720px; margin: 0 auto;">
+    <h1 style="margin-bottom: 16px;">Calculadora de IMC</h1>
+
+    {% if erro %}
+        <div class="flash flash-error">{{ erro }}</div>
+    {% endif %}
+
+    {% if dados %}
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+            <div>
+                <div style="font-size: 1.8rem; font-weight: bold; color: var(--verde-escuro);">
+                    IMC: {{ dados.imc }}
+                    <span class="tooltip-wrap">
+                        <span class="help-icon">?</span>
+                        <span class="tooltip-text">IMC = Peso (kg) ÷ Altura² (m²). Faixas: &lt;18,5 Magreza; 18,5–24,9 Normal; 25–29,9 Sobrepeso; ≥30 Obesidade.</span>
+                    </span>
+                </div>
+                <div style="color: var(--texto-suave); font-size: 0.92rem;">
+                    Peso: {{ dados.peso }} kg | Altura: {{ dados.altura }} m | Idade: {{ dados.idade }} anos | Sexo: {{ dados.sexo }}
+                </div>
+            </div>
+            <span class="imc-badge imc-{{ dados.cor }}">{{ dados.classificacao }}</span>
+        </div>
+
+        <div class="ruler-bar">
+            <div class="ruler-marker" style="left: {{ dados.posicao_pct }}%;"></div>
+        </div>
+        <div class="ruler-labels">
+            <span>Magreza</span>
+            <span>Normal</span>
+            <span>Sobrepeso</span>
+            <span>Obesidade</span>
+        </div>
+
+        <div class="profile-stats-grid" style="margin-top: 20px;">
+            <div>
+                <strong>Peso Ideal:</strong> {{ dados.peso_ideal_min }} kg – {{ dados.peso_ideal_max }} kg
+                <span class="tooltip-wrap">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip-text">Calculado com base na faixa de IMC normal (18,5 a 24,9) para a altura informada.</span>
+                </span>
+            </div>
+            <div>
+                <strong>Gordura Corporal (est.):</strong> {{ dados.gordura_corporal }}% ({{ dados.gordura_classificacao }})
+                <span class="tooltip-wrap">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip-text">Estimativa pela fórmula de Deurenberg considerando IMC, idade e sexo.</span>
+                </span>
+            </div>
+        </div>
+
+        <p style="margin-bottom: 22px; line-height: 1.5; color: var(--texto-suave);">
+            <strong>Recomendação:</strong> {{ dados.recomendacao }}
+        </p>
+    {% endif %}
+
+    <hr style="border: none; border-top: 1px solid var(--borda); margin: 18px 0;">
+
+    <h3 style="margin-bottom: 14px;">Calcular Novamente</h3>
+    <form action="{{ url_for('imc_view') }}" method="POST">
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="peso_novo">Peso (kg)</label>
+                <input type="number" step="0.1" id="peso_novo" name="peso" value="{{ dados.peso if dados else '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="altura_novo">Altura (m)</label>
+                <input type="number" step="0.01" id="altura_novo" name="altura" value="{{ dados.altura if dados else '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="idade_novo">Idade</label>
+                <input type="number" id="idade_novo" name="idade" value="{{ dados.idade if dados else 25 }}" min="1" max="120">
+            </div>
+            <div class="form-group">
+                <label for="sexo_novo">Sexo</label>
+                <select id="sexo_novo" name="sexo">
+                    <option value="masculino" {% if dados and dados.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+                    <option value="feminino" {% if dados and dados.sexo == 'Feminino' %}selected{% endif %}>Feminino</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Recalcular IMC</button>
+    </form>
+</div>
+{% endblock %}

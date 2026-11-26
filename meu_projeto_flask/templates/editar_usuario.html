@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuário - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h2>Atualizar Dados do Usuário</h2>
+
+    <form action="{{ url_for('editar_usuario', alvo_id=usuario.id) }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" value="{{ usuario.nome }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Usuário / E-mail</label>
+            <input type="email" id="email" name="email" value="{{ usuario.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nova_senha">Nova Senha (deixe em branco para manter)</label>
+            <div class="password-wrapper">
+                <input type="password" id="nova_senha" name="nova_senha" placeholder="Nova senha">
+                <button type="button" class="toggle-password" id="toggleEditSenha" aria-label="Exibir ou ocultar senha">👁</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="funcao">Função</label>
+            <select id="funcao" name="funcao" {% if current_user.funcao != 'admin' %}disabled{% endif %}>
+                <option value="comum" {% if usuario.funcao == 'comum' %}selected{% endif %}>Comum</option>
+                <option value="admin" {% if usuario.funcao == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="foto_perfil">Atualizar Foto de Perfil</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" name="acao" value="salvar" class="btn btn-primary">Salvar Alterações</button>
+            {% if usuario.excluido %}
+                <button type="submit" name="acao" value="reativar" class="btn btn-secondary">Reativar Conta</button>
+            {% else %}
+                <button type="submit" name="acao" value="excluir" class="btn btn-danger-outline" onclick="return confirm('Deseja realmente excluir esta conta?');">Excluir Conta</button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const editSenha = document.getElementById("nova_senha");
+    const toggleEdit = document.getElementById("toggleEditSenha");
+    toggleEdit.addEventListener("click", () => {
+        editSenha.type = editSenha.type === "password" ? "text" : "password";
+    });
+</script>
+{% endblock %}

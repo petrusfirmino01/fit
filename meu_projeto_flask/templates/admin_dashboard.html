@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo - Portal Saúde & Bem-Estar{% endblock %}
+
+{% block content %}
+<div class="admin-box">
+    <div class="admin-header-bar">
+        <h1>Painel Administrativo - Gestão de Usuários</h1>
+    </div>
+
+    <div class="admin-toolbar">
+        <form method="GET" action="{{ url_for('admin_dashboard') }}" style="display: flex; gap: 8px;">
+            <input type="text" name="q" value="{{ busca or '' }}" placeholder="🔍 Buscar por nome, e-mail ou ID">
+            <button type="submit" class="btn btn-secondary btn-sm">Buscar</button>
+        </form>
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">+ Novo Usuário</a>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-pill">
+            <span>Total</span>
+            <strong>{{ stats.total }}</strong>
+        </div>
+        <div class="stat-pill">
+            <span>Ativos</span>
+            <strong>{{ stats.ativos }}</strong>
+        </div>
+        <div class="stat-pill">
+            <span>Excluídos</span>
+            <strong>{{ stats.excluidos }}</strong>
+        </div>
+        <div class="stat-pill">
+            <span>Admins</span>
+            <strong>{{ stats.admins }}</strong>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Função</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.nome }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                            <span class="badge-role {% if u.funcao == 'admin' %}badge-admin{% else %}badge-comum{% endif %}">
+                                {{ u.funcao|capitalize }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if u.excluido %}
+                                <span class="badge-role badge-excluido">Excluído</span>
+                            {% else %}
+                                <span class="badge-role badge-admin">Ativo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-links">
+                                <a href="{{ url_for('editar_usuario', alvo_id=u.id) }}" class="btn btn-secondary btn-sm" title="Editar">✏️</a>
+                                <form method="POST" action="{{ url_for('admin_dashboard') }}" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="{{ u.id }}">
+                                    {% if u.excluido %}
+                                        <button type="submit" name="acao" value="reativar" class="btn btn-secondary btn-sm" title="Reativar">♻️</button>
+                                    {% else %}
+                                        <button type="submit" name="acao" value="excluir" class="btn btn-danger-outline btn-sm" title="Excluir" onclick="return confirm('Excluir este usuário?');">🗑️</button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--texto-suave);">Nenhum usuário encontrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
